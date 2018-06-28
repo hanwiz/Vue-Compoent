@@ -1,3 +1,31 @@
+Vue.component('no-ui-slider', {
+    template: "<div :id='sliderId' :ref='sliderId'></div>",
+    props: {
+        sliderId: String,
+        sliderConfig: Object,
+        sliderValue: Array
+    },
+
+    data: function () {
+        return {
+            slider: null
+        }
+    },
+    methods: {
+        updateValue: function (value, handle) {
+            this.$emit('update:sliderValue', value);
+        }
+    },
+    mounted: function () {
+        this.slider = this.$refs[this.sliderId];
+        this.sliderConfig.start = this.sliderValue;
+
+        noUiSlider.create(this.slider, this.sliderConfig);
+
+        this.slider.noUiSlider.on('update', this.updateValue);
+    }
+});
+
 Vue.component('percentage-input', {
     props: {
         value: {
@@ -13,7 +41,7 @@ Vue.component('percentage-input', {
             default: 0
         }
     },
-    data: function() {
+    data: function () {
         return {
             counter: this.value
         }
@@ -31,7 +59,7 @@ Vue.component('percentage-input', {
         }
     },
     watch: {
-        counter: function(val) {
+        counter: function (val) {
             this.$emit('update:value', val);
         }
     },
@@ -49,8 +77,26 @@ Vue.component('percentage-input', {
 new Vue({
     el: '#test',
     data: {
-        value: 50,
-        counter: [50,50,50],
-        searchText: ""
+        counter: [50, 50, 50],
+        sliderConfig: {
+            step: 1,
+            connect: true,
+            range: {
+                'min': [1],
+                'max': [10]
+            },
+            pips: {
+                mode: 'steps',
+                values: [1, 10],
+                filter: function (value, type) {
+                    return value * 2 % 2 ? 0 : 1;
+                },
+                format: wNumb({
+                    decimal: 1
+                }),
+                density: 100
+            }
+        },
+        sliderValues: [[3, 6],[1,7], [2,5]],
     }
 });

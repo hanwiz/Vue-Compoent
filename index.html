@@ -41,7 +41,16 @@
 <body>
     <!-- VUE APP MOUNT -->
     <div id="test">
-        <percentage-input v-for="n in 3" :key="n" v-bind:value.sync="counter[n-1]"></percentage-input>
+        <div v-for="n in 3" :key="n">
+            <percentage-input v-bind:value.sync="counter[n-1]"></percentage-input>
+
+            <no-ui-slider :slider-id="'slider-'+n" :slider-config="sliderConfig" :slider-value.sync="sliderValues[n-1]">
+            </no-ui-slider>
+            <br>
+            <br>
+            <br>
+        </div>
         {{counter}}
+        {{sliderValues}}
     </div>
 </body>
